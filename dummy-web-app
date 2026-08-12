@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enterprise App POC</title>
+</head>
+<body>
+    <h1 id="welcome-header">Welcome to the Secure Portal</h1>
+    <button id="login-btn">Log In</button>
+</body>
+</html>
