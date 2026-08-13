@@ -1,0 +1,30 @@
+name: App Deployment & Automation Trigger
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  trigger-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 1. Uses GitHub's built-in automatic token. You do NOT need to create this!
+      - name: Wait for Vercel Deployment Link
+        uses: vercel/wait-for-deployment-action@v2
+        id: vercel_deploy
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2. Uses your custom token 'QAAUTOMATION' to trigger the QA repo
+      - name: Trigger Automation Pipeline
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.QAAUTOMATION }}
+          repository: your-github-username/automation-test-suite
+          event-type: trigger-automation-tests
+          client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.url }}"}'
