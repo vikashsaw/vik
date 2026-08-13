@@ -1,4 +1,14 @@
-- name: Trigger QA Automation Tests
+name: App Deployment & Automation Trigger
+
+on:
+  deployment_status:
+
+jobs:
+  trigger-qa:
+    if: ${{ github.event.deployment_status.state == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger QA Automation Tests
         run: |
           cat > /tmp/payload.json <<EOF
           {"event_type":"vercel-deployed","client_payload":{"app_url":"${{ github.event.deployment_status.environment_url }}"}}
