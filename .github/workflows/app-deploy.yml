@@ -2,11 +2,10 @@ name: App Deployment & Automation Trigger
 
 on:
   push:
-    branches: [ main, master ]         # Triggers if branch is main OR master
+    branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch: {}                # Adds a manual play button in the UI
-
+  workflow_dispatch: {}
 
 jobs:
   trigger-qa:
@@ -15,18 +14,22 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. Uses GitHub's built-in automatic token. You do NOT need to create this!
-      - name: Wait for Vercel Deployment Link
-        uses: vercel/wait-for-deployment-action@v2
+      # 1. This action reads your repository and pings Vercel to get the live link
+      - name: Fetch Vercel Deployment URL
+        uses: amondnet/vercel-action@v25
         id: vercel_deploy
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-token: ${{ secrets.GITHUB_TOKEN }} # Uses built-in token
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-org-id: "dummy_id" # Standard placeholder for raw HTML
+          vercel-project-id: "dummy_id"
 
-      # 2. Uses your custom token 'QAAUTOMATION' to trigger the QA repo
+      # 2. Uses your custom token to trigger your automation repo
       - name: Trigger Automation Pipeline
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.QAAUTOMATION }}
+          token: ${{ secrets.TEST_AUTO_VIKAS_2411 }}
           repository: vikashsaw/PlaywrightAutomationFramework
           event-type: trigger-automation-tests
-          client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.url }}"}'
+          # This action saves the live link inside 'outputs.preview-url'
+          client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.preview-url }}"}'
