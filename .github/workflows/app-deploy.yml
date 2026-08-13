@@ -25,7 +25,7 @@ jobs:
       - name: Trigger Automation Pipeline
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.TEST_AUTO_VIKAS_2411 }}
+          token: ${{ secrets.QAAUTOMATON }}
           repository: vikashsaw/PlaywrightAutomationFramework
           event-type: trigger-automation-tests
           client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.url }}"}'
