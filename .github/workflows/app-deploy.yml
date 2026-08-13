@@ -2,9 +2,11 @@ name: App Deployment & Automation Trigger
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]         # Triggers if branch is main OR master
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
+  workflow_dispatch: {}                # Adds a manual play button in the UI
+
 
 jobs:
   trigger-qa:
