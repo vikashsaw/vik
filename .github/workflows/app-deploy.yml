@@ -1,20 +1,12 @@
-name: App Deployment & Automation Trigger
-on:
-  deployment_status:
-
-jobs:
-  trigger-qa:
-    if: ${{ github.event.deployment_status.state == 'success' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger QA Automation Tests
+- name: Trigger QA Automation Tests
         run: |
           cat > /tmp/payload.json <<EOF
           {"event_type":"vercel-deployed","client_payload":{"app_url":"${{ github.event.deployment_status.environment_url }}"}}
           EOF
-          curl -X POST \
+          curl -sS -f -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.QAAUTOMATION }}" \
             -H "Content-Type: application/json" \
             -d @/tmp/payload.json \
+            -w "\nHTTP Status: %{http_code}\n" \
             https://api.github.com/repos/vikashsaw/PlaywrightAutomationFramework/dispatches
