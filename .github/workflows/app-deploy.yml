@@ -27,6 +27,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.QAAUTOMATION }}
-          repository: vikashsaw/automation-test-suite
+          repository: vikashsaw/PlaywrightAutomationFramework
           event-type: trigger-automation-tests
           client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.url }}"}'
