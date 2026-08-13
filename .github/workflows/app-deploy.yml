@@ -14,22 +14,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. This action reads your repository and pings Vercel to get the live link
-      - name: Fetch Vercel Deployment URL
-        uses: amondnet/vercel-action@v25
+      # Official, zero-config step to wait for Vercel's URL
+      - name: Wait for Vercel Deployment Link
+        uses: vercel/wait-for-deployment-action@v3.1.0
         id: vercel_deploy
         with:
-          vercel-token: ${{ secrets.GITHUB_TOKEN }} # Uses built-in token
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          vercel-org-id: "dummy_id" # Standard placeholder for raw HTML
-          vercel-project-id: "dummy_id"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Uses your custom token to trigger your automation repo
+      # Triggers your custom automation repository path
       - name: Trigger Automation Pipeline
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.TEST_AUTO_VIKAS_2411 }}
           repository: vikashsaw/PlaywrightAutomationFramework
           event-type: trigger-automation-tests
-          # This action saves the live link inside 'outputs.preview-url'
-          client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.preview-url }}"}'
+          client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.url }}"}'
