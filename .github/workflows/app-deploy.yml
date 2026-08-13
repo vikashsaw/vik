@@ -15,7 +15,7 @@ jobs:
           EOF
           curl -sS -f -X POST \
             -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.QAAUTOMATION }}" \
+            -H "Authorization: Bearer ${{ secrets.QAAUTOMATION }}" \
             -H "Content-Type: application/json" \
             -d @/tmp/payload.json \
             -w "\nHTTP Status: %{http_code}\n" \
