@@ -14,19 +14,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. This uses the correct @main tag to avoid version errors
+      # 1. Fixed parameter name from github-token to token
       - name: Wait for Vercel Deployment Link
         uses: vercel/wait-for-deployment-action@main
         id: vercel_deploy
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }} # Renamed correctly
 
-      # 2. This triggers your automation repository path using your updated QAAUTOMATION secret
+      # 2. This triggers your automation repository path using QAAUTOMATION
       - name: Trigger Automation Pipeline
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.QAAUTOMATION }}
           repository: vikashsaw/PlaywrightAutomationFramework
           event-type: trigger-automation-tests
-          # This reads the URL using the correct variable format: outputs.deployment-url
           client-payload: '{"app_url": "${{ steps.vercel_deploy.outputs.deployment-url }}"}'
