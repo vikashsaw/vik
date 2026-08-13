@@ -7,6 +7,11 @@ on:
     branches: [ main, master ]
   workflow_dispatch: {}
 
+# This blocks grants permission to read Vercel's API logs 
+permissions:
+  deployments: read
+  contents: read
+
 jobs:
   trigger-qa:
     runs-on: ubuntu-latest
@@ -14,14 +19,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. Fixed parameter name from github-token to token
+      # 1. Waits for Vercel using the unlocked token permissions
       - name: Wait for Vercel Deployment Link
         uses: vercel/wait-for-deployment-action@main
         id: vercel_deploy
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} # Renamed correctly
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Switched to github-token as per official repo spec
 
-      # 2. This triggers your automation repository path using QAAUTOMATION
+      # 2. Triggers your custom automation repository path using QAAUTOMATION
       - name: Trigger Automation Pipeline
         uses: peter-evans/repository-dispatch@v3
         with:
